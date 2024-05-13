@@ -57,3 +57,5 @@ EXPOSE 8080
 
 # Run Streamlit on the dynamically assigned PORT
 CMD ["streamlit", "run", "main.py", "--server.port", "8080", "--server.enableCORS", "false", "--server.enableXsrfProtection", "false"]
+# CMD ["streamlit", "run", "main.py"]
+# 

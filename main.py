@@ -11,15 +11,15 @@ import time
 
 # Keywords to search for in lowercase
 keywords = [
-    "ai", "asset", "backup", "ci/cd", "cloud",
+    "api", "asset", "backup", "ci/cd", "cloud",
     "debugging", "devops", "devtool", "elt", "finops", "idp", "infrastructure", "integration",
     "kubernetes", "llm", "ml", "monitoring", "operations", "orchestration", "pipelines", "platform",
     "response", "saas", "scaling", "security", "services", "snowflake", "storage", "terraform",
     "testing", "workflow", "analytics", "architecture", "automation", "cluster",
-    "containerization", "deployment", "development", "engineering", "governance", "hosting",
+    "containerization", "development", "engineering", "hosting",
     "learning", "management", "migration", "microservices", "networking", "observability",
     "recovery", "storage", "visualization", "access", "access control", "access management",
-    "ai-api", "ai coding", "ai testing", "aiops", "api management", "automation tools",
+    "graphql", "ai coding", "ai testing", "aiops", "api management", "automation tools",
     "cloud backup", "cloud cost", "cloud hosting", "cloud migration", "cloud monitoring",
     "cloud scaling", "cloud security", "code testing", "continuous deployment", "continuous integration",
     "cost management", "data", "data analytics", "data engineering", "data governance", "data integration",
@@ -138,15 +138,15 @@ def init_driver():
     firefox_options.add_argument("--no-sandbox")
     firefox_options.add_argument("--disable-dev-shm-usage")
     
-    # geckodriver_path = '/usr/bin/geckodriver'  # Path to the geckodriver installed in Docker
-    # service = FirefoxService(executable_path=geckodriver_path)
-    # return webdriver.Firefox(service=service, options=firefox_options)
-    driver = webdriver.Firefox(
-        service=FirefoxService(GeckoDriverManager().install()),
-        options=firefox_options
-    )
+    geckodriver_path = '/usr/bin/geckodriver'  # Path to the geckodriver installed in Docker
+    service = FirefoxService(executable_path=geckodriver_path)
+    return webdriver.Firefox(service=service, options=firefox_options)
+    # driver = webdriver.Firefox(
+    #     service=FirefoxService(GeckoDriverManager().install()),
+    #     options=firefox_options
+    # )
     # wait = WebDriverWait(driver, 15)
-    return driver
+    # return driver
 
 def website_scrape_and_check_info(url):
     """Scrape a generic website and find relevant keywords."""
