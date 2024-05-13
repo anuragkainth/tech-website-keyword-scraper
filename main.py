@@ -1,12 +1,12 @@
 import streamlit as st
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 import time
 
 # Keywords to search for in lowercase
@@ -81,19 +81,7 @@ def find_keywords(visible_texts, keywords):
 def linkedin_scrape_and_check_info(url, linkedin_username, linkedin_password):
     """Login to LinkedIn and find keywords on a company profile page."""
     # Setup Chrome WebDriver with SSL ignore options
-    chrome_options = Options()
-    chrome_options.add_argument('--ignore-certificate-errors')
-    chrome_options.add_argument('--ignore-ssl-errors')
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    # Initialize Chrome driver
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()),
-        options=chrome_options
-    )
+    driver = init_driver()
     wait = WebDriverWait(driver, 15)
 
     # Open LinkedIn Login Page
@@ -140,22 +128,24 @@ def linkedin_scrape_and_check_info(url, linkedin_username, linkedin_password):
 
     return matched_keywords
 
+def init_driver():
+    """Initialize Firefox driver with pre-installed geckodriver in Docker."""
+    firefox_options = Options()
+    firefox_options.add_argument('--ignore-certificate-errors')
+    firefox_options.add_argument('--ignore-ssl-errors')
+    firefox_options.add_argument("--headless")
+    firefox_options.add_argument("--disable-gpu")
+    firefox_options.add_argument("--no-sandbox")
+    firefox_options.add_argument("--disable-dev-shm-usage")
+    
+    geckodriver_path = '/usr/bin/geckodriver'  # Path to the geckodriver installed in Docker
+    service = FirefoxService(executable_path=geckodriver_path)
+    return webdriver.Firefox(service=service, options=firefox_options)
+
 def website_scrape_and_check_info(url):
     """Scrape a generic website and find relevant keywords."""
     # Setup Chrome WebDriver with SSL ignore options
-    chrome_options = Options()
-    chrome_options.add_argument('--ignore-certificate-errors')
-    chrome_options.add_argument('--ignore-ssl-errors')
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    # Initialize Chrome driver
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()),
-        options=chrome_options
-    )
+    driver = init_driver()  
     wait = WebDriverWait(driver, 15)
 
     # Open the provided website URL
@@ -230,7 +220,7 @@ def main():
 
                 for url, result in results.items():
                     if isinstance(result, list):
-                        st.success(f"Keywords for {url}: {', '.join(result)}")
+                        st.success(f"Keywords for {url}:  {', '.join(result)}")
                     else:
                         st.warning(f"{url}:  {result}")
 
