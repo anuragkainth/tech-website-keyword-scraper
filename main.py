@@ -138,9 +138,15 @@ def init_driver():
     firefox_options.add_argument("--no-sandbox")
     firefox_options.add_argument("--disable-dev-shm-usage")
     
-    geckodriver_path = '/usr/bin/geckodriver'  # Path to the geckodriver installed in Docker
-    service = FirefoxService(executable_path=geckodriver_path)
-    return webdriver.Firefox(service=service, options=firefox_options)
+    # geckodriver_path = '/usr/bin/geckodriver'  # Path to the geckodriver installed in Docker
+    # service = FirefoxService(executable_path=geckodriver_path)
+    # return webdriver.Firefox(service=service, options=firefox_options)
+    driver = webdriver.Firefox(
+        service=FirefoxService(GeckoDriverManager().install()),
+        options=firefox_options
+    )
+    # wait = WebDriverWait(driver, 15)
+    return driver
 
 def website_scrape_and_check_info(url):
     """Scrape a generic website and find relevant keywords."""
